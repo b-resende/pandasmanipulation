@@ -1,0 +1,71 @@
+![](img02.jpg)
+___
+# Manipulação de dataset com pandas e python
+___
+## Conteúdo
+- importar arquivo xlsx;
+- exibir shape do arquivo;
+- exibir colunas;
+- exibir tipos de dados das colunas;
+- criar coluna dia, mês e ano a partir da coluna data;
+- alguns exemplos de representações gráficas do dataset.
+## Importando os pacotes necessários para a análise
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+%matplotlib inline
+## Selecionando o arquivo que se deseja analisar
+df = pd.read_excel('Sistema_jul_2018.xlsx')
+df.head()
+# o arquivo possui dados de passageiros transportados no mês de julho de 2018.
+## Verificando as colunas presentes no arquivo
+df.columns
+## Excluindo colunas
+df1 = df.drop(['Via01', 'Via02', 'Pre01', 'Pre02', 'PAG', 'VT', 'PA',
+       'O/O', 'O/T', 'ESC', 'ISE', 'PS', 'MET', 'VES', 'VTI', 'PAI', 'EST',
+       'Unnamed: 19', 'Unnamed: 20', 'Unnamed: 21',], axis=1)
+df1.head(3)
+## Veriicando os tipos dos dados nas colunas
+df1.dtypes
+## Criando novas colunas (Dia, Mês e Ano) a partir da data
+df1['Dia'] = df1['Data'].dt.day
+df1['Mes'] = df1['Data'].dt.month
+df1['Ano'] = df1['Data'].dt.year
+
+df1.head(3)
+## Visualizações dos dados
+### Gráficos de linhas
+plt.figure(figsize=(8,5))
+
+plt.plot(df1['Dia'],df1['Bruto'])
+plt.xlabel('Dia')
+plt.ylabel('Bruto')
+### Gráfico de densidade
+plt.figure(figsize=(8,5))
+plt.scatter(df1['Dia'],df1['Bruto'], color='blue', marker='o')
+plt.xlabel('Dia')
+plt.ylabel('Bruto')
+## Mantendo no dataset somente os dias úteis da semana
+# Escluindo os dias sábados e domingos
+# dias: 1,7,8,14,15,21,22,28,29
+# indexes: 0,6,7,13,14,20,21,27,28
+df2 = df1.drop([0, 6, 7, 13, 14, 20, 21, 27, 28])
+df2.head()
+# df2 é o dataset com dias úteis
+### Gráfico de linha dias úteis
+plt.figure(figsize=(8,5))
+
+plt.plot(df2['Dia'],df2['Bruto'], label = 'Passageiros por dia')
+plt.xlabel('Dia')
+plt.ylabel('Bruto')
+plt.legend()
+plt.show()
+# Gráfico de barras
+plt.figure(figsize=(8,5))
+
+plt.bar(df2['Dia'],df2['Bruto'], label = 'Passageiros')
+plt.xlabel('Dia')
+plt.ylabel('Bruto')
+plt.legend()
+plt.show()
